@@ -10,7 +10,7 @@ Chatbot Application is a web-based application where users can interact with a b
 First, clone the repository to your local machine using the following command:
 
 ```sh
-git clone https://github.com/BCincioglu/Chatbot_Application.git
+git clone https://github.com/BCincioglu/chatbot-backend.git
 ```
 
 ### 2. Install Dependencies
@@ -18,7 +18,7 @@ git clone https://github.com/BCincioglu/Chatbot_Application.git
 Navigate into the project directory and install the necessary dependencies:
 
 ```sh
-cd Chatbot_Application
+cd chatbot-backend
 npm install
 ```
 
