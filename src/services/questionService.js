@@ -14,6 +14,12 @@ const staticQuestions = [
   " How would you describe the relationship between humans and cats in three words? "
 ];
 
+
+/* Actually, I started to develop the application using OpenAI API,
+but due to a mistake I made on the frontend without realizing it, 
+I used up the tokens because I made thousands of requests during 
+the test, so I implemented it with static queries. */
+
 async function generateQuestionService(sessionId) {
   try {
     const session = await Session.findOne({ sessionId });
@@ -22,25 +28,21 @@ async function generateQuestionService(sessionId) {
       throw new Error('Session not found');
     }
 
-    // Eğer 10 soruya cevap verilmişse oturumu bitir
     if (session.questions.length >= 10) {
       await endSession(sessionId);
       return 'Thank you! The session is now complete.';
     }
 
-    // Mevcut soruya cevap verilmiş mi kontrol ediyoruz
     let questionIndex = session.questionIndex || 0;
 
-    // Eğer session.questions dizisinde şu anki index'e ait cevap yoksa aynı soruyu tekrar döndürüyoruz
     if (session.questions.length <= questionIndex) {
       const currentQuestion = staticQuestions[questionIndex];
       return currentQuestion; // Aynı soruyu döndür
     }
 
-    // Eğer cevap verilmişse bir sonraki soruya geçiyoruz
-    questionIndex = (questionIndex + 1) % staticQuestions.length; // Sonraki soruya geç
-    session.questionIndex = questionIndex; // Indexi güncelle
-    await session.save(); // Güncellenmiş index'i kaydediyoruz
+    questionIndex = (questionIndex + 1) % staticQuestions.length; 
+    session.questionIndex = questionIndex; 
+    await session.save(); 
 
     return staticQuestions[questionIndex];
   } catch (error) {
@@ -57,7 +59,6 @@ async function saveAnswerService(sessionId, question, answer) {
     session.questions.push({ question, answer });
     await session.save();
   
-    // Eğer kullanıcı 10 soruya cevap vermişse oturumu kapat
     if (session.questions.length >= 10) {
       await endSession(sessionId);
     }
